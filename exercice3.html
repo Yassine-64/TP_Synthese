@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Payement de commande</title>
+    <link rel="stylesheet" href="style1.css">
+    <script>
+        function togglePaymentMethod() {
+            var paypalDiv = document.getElementById("paypalDiv");
+            var cardDiv = document.getElementById("cardDiv");
+            if (document.getElementById("paypal").checked) {
+                paypalDiv.style.display = "block";
+                cardDiv.style.display = "none";
+            } else {
+                paypalDiv.style.display = "none";
+                cardDiv.style.display = "block";
+            }
+        }
+
+        function verifier() {
+            var isValid = true;
+            var form = document.forms["paymentForm"];
+            var phone = form["phone"].value;
+            var email = form["email"].value;
+            var cardNumber = form["cardNumber"].value;
+            var verificationCode = form["verificationCode"].value;
+
+            if (phone.length != 9 || isNaN(phone)) isValid = false;
+            if (email && email.indexOf("@") == -1) isValid = false;
+            if (cardNumber && cardNumber.length != 16) isValid = false;
+            if (verificationCode && verificationCode.length != 3) isValid = false;
+
+            return isValid;
+        }
+
+        function valider() {
+            if (verifier()) {
+                var form = document.forms["paymentForm"];
+                var name = form["name"].value;
+                var phone = form["phone"].value;
+                var paymentType = document.getElementById("paypal").checked ? "PayPal" : "Carte Bancaire";
+                document.getElementById("result").innerText = 
+                    "Nom et prénom du client: " + name + "\n" +
+                    "Numéro de téléphone: (+212) " + phone + "\n" +
+                    "Type de payement: " + paymentType;
+            } else {
+                alert("Formulaire invalide.");
+            }
+        }
+    </script>
+</head>
+<body onload="togglePaymentMethod()">
+    <div id="principal">
+        <h1>Informations de payement</h1>
+        <form name="paymentForm" onsubmit="valider(); return false;">
+            <label for="name">Nom et prénom:</label>
+            <input type="text" name="name" required><br><br>
+            <label for="phone">Téléphone:</label>
+            <input type="text" name="phone" required><br><br>
+            <input type="radio" id="paypal" name="paymentMethod" value="PayPal" onclick="togglePaymentMethod()" checked>
+            <label for="paypal">PayPal</label><br>
+            <input type="radio" id="card" name="paymentMethod" value="Card" onclick="togglePaymentMethod()">
+            <label for="card">Carte Bancaire</label><br><br>
+            <div id="paypalDiv">
+                <label for="email">Email PayPal:</label>
+                <input type="email" name="email"><br><br>
+                <img src="paypal.png" alt="PayPal">
+            </div>
+            <div id="cardDiv" style="display:none;">
+                <label for="cardNumber">Numéro de carte:</label>
+                <input type="text" name="cardNumber"><br><br>
+                <label for="verificationCode">Code de vérification:</label>
+                <input type="text" name="verificationCode"><br><br>
+                <img src="visa.png" alt="Visa">
+            </div>
+            <button type="submit">Envoyer</button>
+        </form>
+    </div>
+    <div id="result"></div>
+</body>
+</html>
