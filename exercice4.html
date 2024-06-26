@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mise à jour du mot de passe</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function checkPasswordStrength(password) {
+            var strength = "faible";
+            if (password.length >= 5 && password.length < 8 && /[A-Z]/.test(password)) {
+                strength = "moyen";
+            } else if (password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password)) {
+                strength = "fort";
+            }
+            return strength;
+        }
+
+        $(document).ready(function() {
+            $("#verifyButton").click(function() {
+                var newPassword = $("#newPassword").val();
+                var strength = checkPasswordStrength(newPassword);
+                var imgSrc;
+                switch (strength) {
+                    case "faible":
+                        imgSrc = "weak.png";
+                        break;
+                    case "moyen":
+                        imgSrc = "medium.png";
+                        break;
+                    case "fort":
+                        imgSrc = "strong.png";
+                        break;
+                }
+                $("#passwordStrengthImg").attr("src", imgSrc);
+            });
+        });
+    </script>
+</head>
+<body>
+    <form>
+        <label for="username">Nom d'utilisateur:</label>
+        <input type="text" id="username"><br><br>
+        <label for="currentPassword">Mot de passe actuel:</label>
+        <input type="text" id="currentPassword"><br><br>
+        <label for="newPassword">Nouveau mot de passe:</label>
+        <input type="text" id="newPassword"><br><br>
+        <label for="confirmPassword">Confirmer le nouveau mot de passe:</label>
+        <input type="text" id="confirmPassword"><br><br>
+        <button type="button" id="verifyButton">Vérifier</button>
+        <img id="passwordStrengthImg" alt="Password Strength">
+    </form>
+</body>
+</html>
